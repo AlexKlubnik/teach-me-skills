@@ -24,6 +24,7 @@ hs_err_pid*
 Footer
 
 *.docx
+*.txt
 *.doc
 .idea/*
 *Test*.java
