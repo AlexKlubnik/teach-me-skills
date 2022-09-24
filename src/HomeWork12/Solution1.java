@@ -9,17 +9,16 @@ public class Solution1 {
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter path to file...");
         String pathToFile = scan.nextLine();
-        isValid(pathToFile);
+        validDocumentNumbers(pathToFile);
         scan.close();
     }
 
-    public static void isValid(String pathToFile) {
+    public static void validDocumentNumbers(String pathToFile) {
         try (Scanner fileScanner = new Scanner(new FileReader(pathToFile))) {
 
             while (fileScanner.hasNext()) {
                 String docNum = fileScanner.nextLine();
-                if ((docNum.startsWith("docnum")
-                        || docNum.startsWith("contract"))
+                if ((docNum.startsWith("docnum") || docNum.startsWith("contract"))
                         && docNum.length() == 15) {
                     System.out.println("Document number " + docNum + " is valid");
                 } else System.out.println("Document number " + docNum + " is invalid");
