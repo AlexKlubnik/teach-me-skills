@@ -1,4 +1,4 @@
-package HomeWork12;
+package homework12;
 
 import java.io.FileReader;
 import java.io.FileWriter;

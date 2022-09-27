@@ -1,4 +1,4 @@
-package HomeWork12;
+package homework12;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
