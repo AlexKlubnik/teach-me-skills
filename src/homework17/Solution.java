@@ -1,6 +1,5 @@
 package homework17;
 
-import javax.print.Doc;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,7 +19,6 @@ public class Solution {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-
         scan.close();
     }
 
@@ -34,11 +32,11 @@ public class Solution {
 
         for (File file : fileFolder.listFiles()) {
 
-            if (!file.getName().matches("\\.txt$")) {
-                throw new FileNotFoundException("Invalid format of file");
-            }
-
             String fileName = file.getName().split("\\.")[0];
+
+            if (!file.getName().endsWith(".txt")) {
+                throw new FileNotFoundException("File " + file.getName() + " has invalid format of file");
+            }
 
             documents.put(fileName, fillDocumentByFile(file));
         }
