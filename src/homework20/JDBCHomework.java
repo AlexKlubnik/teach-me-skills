@@ -5,8 +5,8 @@ import java.sql.*;
 public class JDBCHomework {
     public static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     public static final String URL = "jdbc:mysql://localhost:3306/test_db";
-    public static final String USER = "root";
-    public static final String PASSWORD = "123root";
+    public static final String USER = "  ";
+    public static final String PASSWORD = "   ";
     public static final String SELECT_ALL_TMS_STUDENTS = "select id, first_name as name, age from tms_students";
     public static final String CREATE_STUDENTS_CITIES_TABLE = "create table if not exists students_cities\n" +
             "(\n" +
@@ -29,6 +29,10 @@ public class JDBCHomework {
     public static final String GET_HOMELAND_OF_STUDENTS = "select first_name, city\n" +
             "from tms_students as student\n" +
             "         join students_cities city on student.id = city.student_id";
+    public static final String INSERT_STUDENT_INTO_TMS_STUDENTS = "insert into tms_students (first_name, age) values (?, ?)";
+    public static final String INSERT_CITY_INTO_STUDENTS_CITIES = "insert into students_cities(student_id, city) values (?, ?)";
+    public static final String DELETE_STUDENT_FROM_TMS_STUDENTS = "delete from tms_students where id = ?";
+    public static final String DELETE_CITY_FROM_STUDENTS_CITIES = "delete from students_cities where student_id = ?";
 
     public static void main(String[] args) throws ClassNotFoundException {
 
@@ -43,8 +47,8 @@ public class JDBCHomework {
             printStudentsHomeland(statement);
             System.out.println("===========================================");
 
-//            addStudentToTable(connection, "Ann", 27);
-//            addCityToTable(connection, 11, "Gantsevichi");
+//            insertStudentToTable(connection, "Ann", 27);
+//            insertCityToTable(connection, 11, "Gantsevichi");
 //            deleteCity(connection, 11);
 //            deleteStudent(connection, 11);
             printStudents(statement);
@@ -85,8 +89,8 @@ public class JDBCHomework {
         }
     }
 
-    public static void addStudentToTable(Connection connection, String name, int age) {
-        String sql = "insert into tms_students (first_name, age) values (?, ?)";
+    public static void insertStudentToTable(Connection connection, String name, int age) {
+        String sql = INSERT_STUDENT_INTO_TMS_STUDENTS;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
@@ -98,8 +102,8 @@ public class JDBCHomework {
 
     }
 
-    public static void addCityToTable(Connection connection, int studentId, String city) {
-        String sql = "insert into students_cities(student_id, city) values (?, ?)";
+    public static void insertCityToTable(Connection connection, int studentId, String city) {
+        String sql = INSERT_CITY_INTO_STUDENTS_CITIES;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, studentId);
@@ -112,7 +116,7 @@ public class JDBCHomework {
     }
 
     public static void deleteStudent(Connection connection, int studentId) {
-        String sql = "delete from tms_students where id = ?";
+        String sql = DELETE_STUDENT_FROM_TMS_STUDENTS;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, studentId);
@@ -124,7 +128,7 @@ public class JDBCHomework {
     }
 
     public static void deleteCity(Connection connection, int studentId) {
-        String sql = "delete from students_cities where student_id = ?";
+        String sql = DELETE_CITY_FROM_STUDENTS_CITIES;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, studentId);
