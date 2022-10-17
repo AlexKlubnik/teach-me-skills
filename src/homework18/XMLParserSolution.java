@@ -1,33 +1,34 @@
 package homework18;
 
-import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class XMLParserSolution {
 
     public static void main(String[] args) {
 
+        try (Scanner scanner = new Scanner(System.in)) {
             File pathToXml = new File("xmlfiles");
 
-        try {
-            Document dataDoc = getDomDocument(pathToXml);
-            String fileName = getFileName(dataDoc);
 
-            try (FileWriter writer = new FileWriter(fileName + ".txt", true)) {
-                List<String> sonnetList = getSonnetList(dataDoc);
+            System.out.println("Press 1 for Sax parsing of xml file, or 2 for Dom parsing");
 
-                for (String str : sonnetList) {
-                    writer.write("\n" + str);
-                    writer.flush();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (scanner.hasNext()) {
+                int typeOfParsing = scanner.nextInt();
+                if (typeOfParsing == 1) {
+                    writeFromXmlToTxtBySaxParsing(pathToXml);
+                    break;
+                } else if (typeOfParsing == 2) {
+                    DomParser.writeFromXMLtoTxt(pathToXml);
+                    break;
+                } else System.out.println("You should choose number 1 or 2. Please, try again");
             }
 
         } catch (Exception e) {
@@ -35,56 +36,20 @@ public class XMLParserSolution {
         }
     }
 
-    private static Document getDomDocument(File pathToXml) throws IOException {
 
+    private static void writeFromXmlToTxtBySaxParsing(File pathToXml) throws ParserConfigurationException, SAXException, IOException {
         if (!pathToXml.isDirectory()) {
             throw new IOException((pathToXml.getName()) + " is not a directory!");
         } else if (pathToXml.listFiles().length > 1) {
             throw new IOException((pathToXml.getName()) + " contains more than one file");
-        } else if (pathToXml.listFiles().length == 0 || !pathToXml.listFiles()[0].getName().endsWith(".xml") ) {
+        } else if (pathToXml.listFiles().length == 0 || !pathToXml.listFiles()[0].getName().endsWith(".xml")) {
             throw new IOException(pathToXml.getName() + " doesn't contain any xml file!");
         }
 
-        Document dataDoc = null;
-
-        try {
-            dataDoc = DocumentBuilderFactory
-                    .newInstance()
-                    .newDocumentBuilder()
-                    .parse(pathToXml.listFiles()[0]);
-
-            dataDoc.getDocumentElement().normalize();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return dataDoc;
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        DefaultHandler handler = new SonnetHandler();
+        saxParser.parse(pathToXml.listFiles()[0], handler);
     }
-
-    private static String getFileName(Document dataDoc) {
-        return (dataDoc.getElementsByTagName("firstName").item(0).getTextContent() +
-                "_" +
-                dataDoc.getElementsByTagName("lastName").item(0).getTextContent() +
-                "_" +
-                dataDoc.getElementsByTagName("title").item(0).getTextContent());
-    }
-
-    private static List<String> getSonnetList(Document dataDoc) {
-
-        List<String> sonnetList = new ArrayList<>();
-        int length = dataDoc.getElementsByTagName("line").getLength();
-
-        for (int i = 0; i < length; i++) {
-            String line = dataDoc
-                    .getElementsByTagName("line")
-                    .item(i)
-                    .getTextContent();
-
-            sonnetList.add(line);
-        }
-        return sonnetList;
-    }
-
 
 }
